@@ -1,0 +1,8 @@
+target
+debug
+**/*.rs.bk
+.gitignore
+.git
+.vscode
+.dockerignore
+Dockerfile 

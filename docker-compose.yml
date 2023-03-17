@@ -1,0 +1,50 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:15.2
+    restart: always
+    env_file:
+      - docker.env
+    ports:
+      - 5432:5432
+    networks:
+      - shared-network
+    volumes:
+      - ./postgres-db:/var/lib/postgresql/data
+  
+  server:
+    container_name: silo_server
+    restart: unless-stopped
+    image: silo-server-prod:0.1.0
+    build:
+      context: server
+      dockerfile: Dockerfile
+    ports:
+      - 8000:8000
+    networks:
+      - shared-network
+    depends_on:
+      - postgres
+
+  client:
+    container_name: silo_client
+    restart: unless-stopped
+    image: silo-client-prod:0.1.0
+    build:
+      context: client
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    networks:
+      - shared-network
+    depends_on:
+      - server
+    volumes:
+      - ./client/app:/usr/src/client/app
+      - ./client/public:/usr/src/client/public
+
+networks:
+  shared-network:
+
+    
