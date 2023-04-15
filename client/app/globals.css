@@ -1,20 +1,26 @@
 /* colors definitions */
 :root {
-    --lightest-black: rgba(28, 28, 28);
-    --light-black: rgb(19, 20, 21);
+    --dimmed: rgb(165, 165, 186);
+    --light-gray: rgb(218, 218, 221);
+    --dark-gray: rgb(50, 50, 77);
+    --light-black: rgb(24, 24, 38);
+    --lighter-black: rgb(33, 33, 51);
+    --dark-white: rgb(246, 247, 249);
     --white: rgb(255, 255, 255);
-    --gray: rgba(182, 182, 182, 0.357);
 }
 
 /* theme based color definitions */
 html {
+    --secondary-bg: var(--white);
+    --border: var(--light-gray);
     --color: var(--light-black);
-    --bg: var(--white);
+    --bg: var(--dark-white);
 }
 
 @media (prefers-color-scheme: dark) {
     html {
-        --border: var(--lightest-black);
+        --secondary-bg: var(--lighter-black);
+        --border: var(--dark-gray);
         --bg: var(--light-black);
         --color: var(--white);
     }

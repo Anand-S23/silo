@@ -1,5 +1,5 @@
-import './static/bootstrap/bootstrap-icons.css'
-import './static/bootstrap/bootstrap.css'
+import '../public/static/bootstrap/bootstrap-icons.css'
+import '../public/static/bootstrap/bootstrap.css'
 import './globals.css'
 
 export const metadata = {
