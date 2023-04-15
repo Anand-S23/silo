@@ -1,0 +1,47 @@
+.slidesbar {
+    border-right: solid var(--border) 1px;
+    background-color: var(--secondary-bg);
+    width: 223px !important;
+}
+
+.logosection {
+    border-bottom: solid var(--border) 1px;
+    padding: 16px 14px;
+    width: 100%;
+}
+
+.logo {
+    border-radius: 5px;
+    height: 32px;
+    width: 32px;
+}
+
+.logotext {
+    color: var(--color);
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.logodescription {
+    color: var(--dimmed);
+    font-size: 0.75rem;
+    font-weight: 350;
+}
+
+.slidessection {
+    padding: 20px;
+    width: 100%;
+}
+
+.slide {
+    border: solid var(--border) 1px;
+    margin-bottom: 20px;
+    transition: 0.1s;
+    cursor: pointer;
+    height: 100px;
+    width: 100%;
+}
+
+.slide:hover {
+    opacity: 50%;
+}
