@@ -18,8 +18,9 @@ pub struct AppState {
 async fn main() {
     dotenv().ok();
 
-    let database_url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    println!("{}", database_url);
+    let database_url = std::env::var("DATABASE_URL")
+        .expect("DATABASE_URL must be set");
+
     let pool = match PgPoolOptions::new()
         .max_connections(10)
         .connect(&database_url)
