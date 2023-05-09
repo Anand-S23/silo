@@ -2,25 +2,26 @@ version: '3.9'
 
 services:
   postgres:
-    image: postgres:13
+    image: postgres:15
     restart: always
-    env_file:
-      - .env
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_DB: silo_db
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./silo_postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
       - shared-network
 
   server:
-    container_name: silo_server
     restart: always
     build:
       context: server
       dockerfile: Dockerfile
-    env_file:
-      - .env
+    environment:
+      DATABASE_URL: postgres://postgres:mysecretpassword@postgres/silo_db
     ports:
       - "8000:8000"
     depends_on:
@@ -29,7 +30,6 @@ services:
       - shared-network
 
   client:
-    container_name: silo_client
     restart: unless-stopped
     build:
       context: client
@@ -46,6 +46,3 @@ services:
 
 networks:
   shared-network:
-
-volumes:
-  postgres_data:
