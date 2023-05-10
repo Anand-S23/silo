@@ -4,10 +4,8 @@ services:
   postgres:
     image: postgres:15
     restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: mysecretpassword
-      POSTGRES_DB: silo_db
+    env_file:
+      - .env
     volumes:
       - ./silo_postgres_data:/var/lib/postgresql/data
     ports:
@@ -20,8 +18,8 @@ services:
     build:
       context: server
       dockerfile: Dockerfile
-    environment:
-      DATABASE_URL: postgres://postgres:mysecretpassword@postgres/silo_db
+    env_file:
+      - .env
     ports:
       - "8000:8000"
     depends_on:
