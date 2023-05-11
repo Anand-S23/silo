@@ -21,7 +21,7 @@ impl Config {
             .expect("JWT_MAXAGE not provided");
 
         Config {
-            database_url,
+            db_url,
             jwt_secret,
             jwt_expires_in,
             jwt_maxage: jwt_maxage.parse::<i32>().unwrap(),
