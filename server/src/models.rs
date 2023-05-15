@@ -8,8 +8,16 @@ pub struct User {
     pub password: String,
 }
 
-pub struct CreateUserData {
+#[derive(Debug, Deserialize)]
+pub struct BaseUserData {
+
     pub username: String,
+    pub email: String,
+    pub password: String,
+}
+
+#[derive(Serialize, Debug)]
+pub struct LoginData {
     pub email: String,
     pub password: String,
 }

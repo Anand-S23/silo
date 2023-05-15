@@ -1,5 +1,8 @@
 mod config;
 mod routes;
+mod handlers;
+mod models;
+mod auth;
 
 use axum::http::{
     header::{ACCEPT, AUTHORIZATION, CONTENT_TYPE},
@@ -50,7 +53,8 @@ async fn main() {
             db: pool.clone(),
             env: config.clone(),
         })
-    ).layer(cors);
+    )
+    .layer(cors);
 
     println!("🚀 Silo server started successfully");
     axum::Server::bind(&"0.0.0.0:8000".parse().unwrap())
