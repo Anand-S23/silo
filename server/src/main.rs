@@ -3,6 +3,7 @@ mod routes;
 mod handlers;
 mod models;
 mod auth;
+mod sql;
 
 use axum::http::{
     header::{ACCEPT, AUTHORIZATION, CONTENT_TYPE},
