@@ -1,16 +1,24 @@
 use axum::Json;
 use regex::Regex;
 
-pub fn validate_username(username: &str) -> bool {
+use crate::models::BaseUserData;
+
+pub fn validate_register_data(data: &BaseUserData) -> Vec<String> {
+    let mut errors: Vec<String> = Vec::new();
     let username_regex = Regex::new(r"^[a-zA-Z0-9_-]{5,20}$").unwrap();
-    username_regex.is_match(username)
-}
-
-pub fn validate_email(email: &str) -> bool {
     let email_regex = Regex::new(r"^([a-z0-9_+]([a-z0-9_+.]*[a-z0-9_+])?)@([a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6})").unwrap();
-    email_regex.is_match(email)
-}
 
-pub fn validate_password(password: &str) -> bool {
-    password.len() >= 8 && password.len() <= 50
+    if !username_regex.is_match(&data.username) {
+        errors.push("Username must be 5 to 20 alphanumeric characters seperated by dashes or underscores".to_string())
+    }
+
+    if !email_regex.is_match(&data.email) {
+        errors.push("Email is not valid".to_string())
+    }
+
+    if data.password.len() < 8 || data.password.len() > 50 {
+        errors.push("Password must have at least 8 characters".to_string())
+    }
+
+    errors
 }
