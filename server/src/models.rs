@@ -8,7 +8,7 @@ pub struct User {
     pub password: String,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct BaseUserData {
 
     pub username: String,
@@ -16,7 +16,7 @@ pub struct BaseUserData {
     pub password: String,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct LoginData {
     pub email: String,
     pub password: String,

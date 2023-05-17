@@ -1,12 +1,13 @@
 use axum::{routing::{get, post}, Router, response::IntoResponse, Json};
 use std::sync::Arc;
-use crate::{AppState, handlers::register_handler};
+use crate::{AppState, handlers::{register_handler, login_handler}};
 
 
 pub fn create_router(app_state: Arc<AppState>) -> Router {
     Router::new()
         .route("/api/healthchecker", get(health_checker_handler))
         .route("/api/auth/register", post(register_handler))
+        .route("/api/auth/login", post(login_handler))
         .with_state(app_state)
 }
 
