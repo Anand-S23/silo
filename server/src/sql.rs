@@ -1,5 +1,4 @@
 use sqlx::PgPool;
-use uuid::Uuid;
 
 use crate::models::{User, BaseUserData};
 
@@ -14,14 +13,6 @@ impl User {
             .bind(data.username)
             .bind(data.email)
             .bind(data.password)
-            .fetch_one(pool)
-            .await
-            .ok()
-    }
-
-    pub async fn find_by_id(id: Uuid, pool: &PgPool) -> Option<User> {
-        sqlx::query_as(&"SELECT * FROM users WHERE id = $1 LIMIT 1")
-            .bind(id)
             .fetch_one(pool)
             .await
             .ok()

@@ -4,13 +4,17 @@ use argon2::{password_hash::SaltString, Argon2, PasswordHasher};
 use axum::{Json, extract::State, response::IntoResponse, http::StatusCode};
 use rand_core::OsRng;
 
-use crate::{models::{BaseUserData, User}, AppState, auth::AuthValidation};
+use crate::{
+    AppState, 
+    models::{BaseUserData, User}, 
+    auth::{validate_register_data, sign_jwt}
+};
 
 pub async fn register_handler(
     State(data): State<Arc<AppState>>,
     Json(mut input): Json<BaseUserData>,
 ) -> Result<impl IntoResponse, (StatusCode, Json<serde_json::Value>)> {
-    let result = AuthValidation::validate_register_data(&input);
+    let result = validate_register_data(&input);
     if result.len != 0 {
         return Err((StatusCode::BAD_REQUEST, Json(result.errors)));
     }
@@ -33,24 +37,47 @@ pub async fn register_handler(
         .hash_password(input.password.as_bytes(), &salt)
         .map_err(|e| {
             let error_response = serde_json::json!({
-                "errors": [{
-                    "msg": format!("Error while hashing password: {}", e)
-                }]
+                "errors": [
+                    {
+                        "msg": format!("Error while hashing password: {}", e)
+                    }
+                ]
             });
             (StatusCode::INTERNAL_SERVER_ERROR, Json(error_response))
         })
         .map(|hash| hash.to_string())?;
 
     input.password = hashed_password;
-    println!("{} - {} - {}", input.email, input.username, input.password);
-    if User::create(input, &data.db).await.is_none() {
-        let error_response = serde_json::json!({
-            "errors": [{
-                "msg": "DB error, could not create account"
-            }]
-        });
-        return Err((StatusCode::INTERNAL_SERVER_ERROR, Json(error_response)));
-    }
+    let user = match User::create(input, &data.db).await {
+        Some(u) => u,
+        None => return Err((StatusCode::INTERNAL_SERVER_ERROR, Json(
+            serde_json::json!({
+                "errors": [
+                    {
+                        "msg": "DB error, could not create account"
+                    }
+                ]
+            })
+        )))
+    };
 
-    Ok(Json(serde_json::json!({"status": "success"})))
+    let token = sign_jwt(user.id, data.env.jwt_secret.clone())
+        .map_err(|e| {
+            let error_response = serde_json::json!({
+                "errors": [
+                    {
+                        "msg": format!("Error while signing token: {}", e)
+                    }
+                ]
+            });
+            (StatusCode::INTERNAL_SERVER_ERROR, Json(error_response))
+        })?;
+
+    Ok((
+        StatusCode::CREATED, Json(
+            serde_json::json!({
+                "token": token
+            })
+        )
+    ))
 }
