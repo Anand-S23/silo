@@ -1,9 +1,8 @@
-mod config;
 mod routes;
+mod db;
 mod handlers;
-mod models;
-mod auth;
-mod sql;
+mod middleware;
+mod utils;
 
 use axum::http::{
     header::{ACCEPT, AUTHORIZATION, CONTENT_TYPE},
@@ -11,7 +10,7 @@ use axum::http::{
 };
 
 use sqlx::{postgres::PgPoolOptions, Pool, Postgres};
-use config::Config;
+use utils::config::Config;
 use std::sync::Arc;
 use dotenv::dotenv;
 use routes::create_router;

@@ -1,6 +1,17 @@
-use axum::{routing::{get, post}, Router, response::IntoResponse, Json};
 use std::sync::Arc;
-use crate::{AppState, handlers::{register_handler, login_handler}};
+
+use axum::{
+    routing::{get, post}, 
+    Router, Json,
+    response::IntoResponse
+};
+
+use crate::{
+    AppState, 
+    handlers::{
+        auth::{register_handler, login_handler}
+    }
+};
 
 
 pub fn create_router(app_state: Arc<AppState>) -> Router {

@@ -1,18 +1,25 @@
 use std::{sync::Arc};
 
-use argon2::{password_hash::SaltString, Argon2, PasswordHasher, PasswordHash, PasswordVerifier};
 use axum::{Json, extract::State, response::IntoResponse, http::StatusCode};
 use rand_core::OsRng;
+use argon2::{
+    password_hash::SaltString, 
+    Argon2, 
+    PasswordHasher, 
+    PasswordHash, 
+    PasswordVerifier
+};
 
 use crate::{
     AppState, 
-    models::{BaseUserData, User, LoginData}, 
-    auth::{validate_register_data, sign_jwt}
+    db::models::{User, RegisterInput, LoginInput},
+    utils::jwt::sign_jwt, 
+    middleware::{validate::validate_register_data}
 };
 
 pub async fn register_handler(
     State(data): State<Arc<AppState>>,
-    Json(mut input): Json<BaseUserData>,
+    Json(mut input): Json<RegisterInput>,
 ) -> Result<impl IntoResponse, (StatusCode, Json<serde_json::Value>)> {
     let result = validate_register_data(&input);
     if result.len != 0 {
@@ -78,7 +85,7 @@ pub async fn register_handler(
 
 pub async fn login_handler(
     State(data): State<Arc<AppState>>,
-    Json(input): Json<LoginData>,
+    Json(input): Json<LoginInput>,
 ) -> Result<impl IntoResponse, (StatusCode, Json<serde_json::Value>)> {
     let user = match User::find_by_email(&input.email, &data.db).await {
         Some(u) => u,
