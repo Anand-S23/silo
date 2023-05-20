@@ -28,12 +28,12 @@ pub struct LoginInput {
 
 // Slides
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Deserialize, sqlx::FromRow, Serialize, Clone)]
 pub struct Presentation {
     pub id: uuid::Uuid,
     pub owner: uuid::Uuid,
     pub name: String,
-    pub filename: uuid::Uuid,
+    pub filename: String,
 }
 
 
@@ -62,11 +62,18 @@ pub struct Slide {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PresentationInput {
-    pub owner: uuid::Uuid,
     pub name: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PresentationJson {
     pub slides: Vec<Slide>
+}
+
+impl PresentationJson {
+    pub fn new() -> Self {
+        PresentationJson { 
+            slides: Vec::new()
+        }
+    }
 }
