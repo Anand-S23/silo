@@ -11,3 +11,11 @@ CREATE TABLE
     );
 
 CREATE INDEX users_email_idx ON users (email);
+
+CREATE TABLE
+    "presentations" (
+        id UUID NOT NULL PRIMARY KEY DEFAULT (uuid_generate_v4()),
+        owner UUID NOT NULL DEFAULT (uuid_generate_v4()),
+        name VARCHAR(255) NOT NULL,
+        filename VARCHAR(255) NOT NULL,
+    );
