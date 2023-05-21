@@ -108,4 +108,24 @@ impl Presentation {
         
         Ok(presentation)
     }
+
+    pub async fn all(
+        owner_id: Uuid, pool: &PgPool
+    ) -> Result<Vec<Presentation>, (StatusCode, Json<serde_json::Value>)> {
+        Ok(sqlx::query_as(&"SELECT * FROM presentations WHERE id = $1")
+            .bind(owner_id.to_string())
+            .fetch_all(pool)
+            .await
+            .map_err(|e| {
+                let error_response = serde_json::json!({
+                    "errors": [
+                        {
+                            "msg": format!("Error while updating db: {}", e)
+                        }
+                    ]
+                });
+                (StatusCode::INTERNAL_SERVER_ERROR, Json(error_response))
+            })?
+        )
+    }
 }
