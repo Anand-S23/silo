@@ -17,7 +17,7 @@ use crate::{
     middleware::{validate::validate_register_data}
 };
 
-pub async fn register_handler(
+pub async fn register(
     State(data): State<Arc<AppState>>,
     Json(mut input): Json<RegisterInput>,
 ) -> Result<impl IntoResponse, (StatusCode, Json<serde_json::Value>)> {
@@ -83,7 +83,7 @@ pub async fn register_handler(
     Ok(Json(serde_json::json!({"token": token})))
 }
 
-pub async fn login_handler(
+pub async fn login(
     State(data): State<Arc<AppState>>,
     Json(input): Json<LoginInput>,
 ) -> Result<impl IntoResponse, (StatusCode, Json<serde_json::Value>)> {
